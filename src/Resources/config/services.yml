@@ -1,0 +1,10 @@
+services:
+    _defaults: { autowire: true, autoconfigure: true, public: true }
+
+    # Contao frontend module Markocupic\RszMemberListingBundle\Controller\FrontendModule\RszMemberListingModuleController
+    Markocupic\RszMemberListingBundle\Controller\FrontendModule\RszMemberListingModuleController:
+        tags:
+            - { name: contao.frontend_module, category: rsz_frontend_modules, template: mod_rsz_member_listing, type: rsz_member_listing_module }
+            - { name: container.service_subscriber }
+        public: true
+

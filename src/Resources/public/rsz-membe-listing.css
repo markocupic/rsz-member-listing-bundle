@@ -1,0 +1,16 @@
+
+.rsz-mitgliederliste ul
+{
+	padding-left:0;
+	list-style:none;
+}
+
+.rsz-mitgliederliste ul>li
+{
+	margin-bottom:0.5em;
+}
+
+.rsz-mitgliederliste span.bold
+{
+	font-weight:bold;
+}
