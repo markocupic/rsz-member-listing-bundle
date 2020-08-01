@@ -14,4 +14,4 @@
 /**
  * Frontend modules
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rsz_member_listing_module'] = '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rsz_member_listing_module'] = '{title_legend},name,headline,type;{config_legend},rszSteckbriefReaderPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';

@@ -24,7 +24,8 @@
   },
   "require": {
     "contao/core-bundle": "^4.9",
-    "markocupic/rsz-benutzerverwaltung-bundle": "dev-master"
+    "markocupic/rsz-benutzerverwaltung-bundle": "dev-master",
+    "markocupic/rsz-steckbrief-bundle": "dev-master"
   },
   "require-dev": {
     "contao/test-case": "^4.0",

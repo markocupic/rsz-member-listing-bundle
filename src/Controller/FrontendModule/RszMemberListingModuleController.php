@@ -53,7 +53,7 @@ class RszMemberListingModuleController extends AbstractFrontendModuleController
     {
         $services = parent::getSubscribedServices();
 
-        //$services['contao.framework'] = ContaoFramework::class;
+        $services['contao.framework'] = ContaoFramework::class;
         //$services['database_connection'] = Connection::class;
         //$services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         //$services['security.helper'] = Security::class;
@@ -86,39 +86,52 @@ class RszMemberListingModuleController extends AbstractFrontendModuleController
      */
     protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
     {
-        $arrMembers = [];
-        $objMembers = Database::getInstance()
+        /** @var PageModel $pageModelAdapter */
+        $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+
+        /** @var StringUtil $stringUtilAdapter */
+        $stringUtilAdapter = $this->get('contao.framework')->getAdapter(StringUtil::class);
+
+        /** @var Database $databaseAdapter */
+        $databaseAdapter = $this->get('contao.framework')->getAdapter(Database::class);
+
+        // Die ganze Tabelle
+        $objJumpTo = $pageModelAdapter->findByPk($model->rszSteckbriefReaderPage);
+
+        $arrUsers = [];
+        $objUser = $databaseAdapter->getInstance()
             ->prepare("SELECT * FROM tl_user WHERE isRSZ=? AND disable=? ORDER BY fe_sorting ASC, trainerFromGroup DESC, dateOfBirth")
             ->execute('1', '');
 
-        while ($objMembers->next())
+        while ($objUser->next())
         {
             $hasSteckbrief = null;
-            $objSteckbrief = Database::getInstance()
+            $objSteckbrief = $databaseAdapter->getInstance()
                 ->prepare("SELECT * FROM tl_rsz_steckbrief WHERE pid=? AND aktiv=?")
-                ->execute($objMembers->id, 1);
+                ->execute($objUser->id, 1);
             if ($objSteckbrief->numRows)
             {
                 $hasSteckbrief = true;
             }
 
-            $arrMembers[] = [
-                'hasSteckbrief'         => $hasSteckbrief,
-                'id'                    => StringUtil::specialchars($objMembers->id),
-                'name'                  => StringUtil::specialchars($objMembers->name),
-                'funktion'              => $objMembers->funktion != "" ? StringUtil::specialchars(implode(", ", StringUtil::deserialize($objMembers->funktion,true))) : "",
-                'gender'                => StringUtil::specialchars($objMembers->gender),
-                'funktionsbeschreibung' => StringUtil::specialchars($objMembers->funktionsbeschreibung),
-                'link_digitalrock'      => $objMembers->link_digitalrock,
-                'nationalmannschaft'    => StringUtil::specialchars($objMembers->nationalmannschaft),
-                'kategorie'             => StringUtil::specialchars($objMembers->kategorie),
-                'niveau'                => StringUtil::specialchars($objMembers->niveau),
-                'trainingsgruppe'       => trim($objMembers->trainingsgruppe),
-                'trainerFromGroup'      => trim($objMembers->trainerFromGroup),
+            $arrUsers[] = [
+                'hasSteckbrief'         => ($hasSteckbrief && $objJumpTo !== null) ? true : false,
+                'portraitHref'          => ($hasSteckbrief && $objJumpTo !== null) ? $objJumpTo->getFrontendUrl('/' . $objUser->username) : null,
+                'id'                    => $stringUtilAdapter->specialchars($objUser->id),
+                'name'                  => $stringUtilAdapter->specialchars($objUser->name),
+                'funktion'              => $objUser->funktion != "" ? $stringUtilAdapter->specialchars(implode(", ", $stringUtilAdapter->deserialize($objUser->funktion, true))) : "",
+                'gender'                => $stringUtilAdapter->specialchars($objUser->gender),
+                'funktionsbeschreibung' => $stringUtilAdapter->specialchars($objUser->funktionsbeschreibung),
+                'link_digitalrock'      => $objUser->link_digitalrock,
+                'nationalmannschaft'    => $stringUtilAdapter->specialchars($objUser->nationalmannschaft),
+                'kategorie'             => $stringUtilAdapter->specialchars($objUser->kategorie),
+                'niveau'                => $stringUtilAdapter->specialchars($objUser->niveau),
+                'trainingsgruppe'       => trim((string) $objUser->trainingsgruppe),
+                'trainerFromGroup'      => trim((string) $objUser->trainerFromGroup),
             ];
         }
 
-        $template->arrMembers = $arrMembers;
+        $template->arrUsers = $arrUsers;
 
         return $template->getResponse();
     }

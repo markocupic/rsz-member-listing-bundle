@@ -12,57 +12,57 @@
         <?php foreach ($trainingsgruppen as $trainingsgruppe): ?>
         <?php if($trainingsgruppe === 'Alle Trainingsgruppen'): continue ?><?php endif; ?>
 
-        <?php $hasMember = false; ?>
-        <?php foreach ($this->arrMembers as $arrMember): ?>
-        <?php if (is_int(strpos($arrMember['funktion'],"Athlet")) && trim($arrMember['trainingsgruppe']) === trim($trainingsgruppe)): ?>
-        <?php $hasMember = true; ?>
+        <?php $hasUser = false; ?>
+        <?php foreach ($this->arrUsers as $arrUser): ?>
+        <?php if (is_int(strpos($arrUser['funktion'],"Athlet")) && trim($arrUser['trainingsgruppe']) === trim($trainingsgruppe)): ?>
+        <?php $hasUser = true; ?>
         <?php endif; ?>
         <?php endforeach; ?>
 
-        <?php if($hasMember): ?>
+        <?php if($hasUser): ?>
         <h3><?= $trainingsgruppe ?></h3>
         <ul>
-            <?php foreach ($this->arrMembers as $arrMember): ?>
-            <?php if (strpos($arrMember['funktion'],"Athlet") !== false && trim($arrMember['trainingsgruppe']) === trim($trainingsgruppe)): ?>
-            <?php if  ($arrMember['hasSteckbrief']): ?>
+            <?php foreach ($this->arrUsers as $arrUser): ?>
+            <?php if (strpos($arrUser['funktion'],"Athlet") !== false && trim($arrUser['trainingsgruppe']) === trim($trainingsgruppe)): ?>
+            <?php if  ($arrUser['hasSteckbrief']): ?>
             <li>
-                <span class="fa fa-star" onclick="$.colorbox({href:'<?php echo $arrMember['link_digitalrock']; ?>', iframe: true, width: '95%', height:'95%', scrolling:true});" title="Resultate an nationalen Wettkämpfen"></span>
-                <a href="{{link_url::portrait}}?uid=<?php echo $arrMember["id"]; ?>" title="Steckbrief anzeigen" alt="Steckbrief anzeigen"><span class="bold"><?php echo $arrMember["name"]; ?></span></a>, <?php echo $arrMember['kategorie'] . ($arrMember['nationalmannschaft'] == true ? " , Nationalm." : ""); ?>
+                <span class="fa fa-star" onclick="$.colorbox({href:'<?php echo $arrUser['link_digitalrock']; ?>', iframe: true, width: '95%', height:'95%', scrolling:true});" title="Resultate an nationalen Wettkämpfen"></span>
+                <a href="<?= $arrUser['portraitHref'] ?>" title="Steckbrief anzeigen" alt="Steckbrief anzeigen"><span class="font-weight-bold"><?php echo $arrUser["name"]; ?></span></a>, <?php echo $arrUser['kategorie'] . ($arrUser['nationalmannschaft'] == true ? " , Nationalm." : ""); ?>
             </li>
             <?php else: ?>
             <li>
-                <span class="fa fa-star" onclick="$.colorbox({href:'<?php echo $arrMember['link_digitalrock']; ?>', iframe: true, width: '95%', height:'95%', scrolling:true});" title="Resultate an nationalen Wettkämpfen"></span>
-                <span class="bold"><?php echo $arrMember['name']; ?></span>, <?php echo $arrMember['kategorie'] . ($arrMember['nationalmannschaft'] == true ? ", Nationalm." : ""); ?>
+                <span class="fa fa-star" onclick="$.colorbox({href:'<?php echo $arrUser['link_digitalrock']; ?>', iframe: true, width: '95%', height:'95%', scrolling:true});" title="Resultate an nationalen Wettkämpfen"></span>
+                <span class="font-weight-bold"><?php echo $arrUser['name']; ?></span>, <?php echo $arrUser['kategorie'] . ($arrUser['nationalmannschaft'] == true ? ", Nationalm." : ""); ?>
             </li>
             <?php endif; ?>
             <?php endif; ?>
             <?php endforeach; ?>
         </ul>
-        <?php endif; ?><!--end $hasMember -->
+        <?php endif; ?><!--end $hasUser -->
         <?php endforeach; ?>
     </div>
 
     <div class="col-12 col-lg-6">
         <h2>Trainer/Wettkampfcoach</h2>
         <ul>
-            <?php foreach ($this->arrMembers as $arrMember): ?>
-            <?php if (strstr($arrMember['funktion'],"Trainer") ||  strstr($arrMember['funktion'],"Wettkampfcoach")): ?>
+            <?php foreach ($this->arrUsers as $arrUser): ?>
+            <?php if (strstr($arrUser['funktion'],"Trainer") ||  strstr($arrUser['funktion'],"Wettkampfcoach")): ?>
             <li>
                 <?php $arrFunction = []; ?>
-                <?php if(strpos($arrMember['funktionsbeschreibung'],"Chef Ressort Leistungssport") !== false) $arrFunction[] = "Chef Ressort Leistungssport"; ?>
-                <?php if(strpos($arrMember['funktionsbeschreibung'],"Chef Ressort Nachwuchs") !== false) $arrFunction[] = "Chef Ressort Nachwuchs"; ?>
-                <?php if(strpos($arrMember['funktion'],"Trainer") !== false) $arrFunction[] = "Trainer"; ?>
-                <?php if(strpos($arrMember['funktion'],"Wettkampfcoach") !== false) $arrFunction[] = "Wettkampfcoach"; ?>
+                <?php if(strpos($arrUser['funktionsbeschreibung'],"Chef Ressort Leistungssport") !== false) $arrFunction[] = "Chef Ressort Leistungssport"; ?>
+                <?php if(strpos($arrUser['funktionsbeschreibung'],"Chef Ressort Nachwuchs") !== false) $arrFunction[] = "Chef Ressort Nachwuchs"; ?>
+                <?php if(strpos($arrUser['funktion'],"Trainer") !== false) $arrFunction[] = "Trainer"; ?>
+                <?php if(strpos($arrUser['funktion'],"Wettkampfcoach") !== false) $arrFunction[] = "Wettkampfcoach"; ?>
 
-                <?php if ($arrMember['hasSteckbrief']): ?>
-                <a href="{{link_url::portrait}}?uid=<?php echo $arrMember['id']; ?>" title="Steckbrief anzeigen" alt="Steckbrief anzeigen"><span class="bold"><?php echo $arrMember["name"]; ?></span></a>
+                <?php if ($arrUser['hasSteckbrief']): ?>
+                <a href="<?= $arrUser['portraitHref'] ?>" title="Steckbrief anzeigen" alt="Steckbrief anzeigen"><span class="font-weight-bold"><?php echo $arrUser["name"]; ?></span></a>
                 <?php echo implode(', ', $arrFunction); ?>
                 <?php else: ?>
-                <span class="bold"><?php echo $arrMember['name']; ?></span>
+                <span class="font-weight-bold"><?php echo $arrUser['name']; ?></span>
                 <?php echo implode(', ', $arrFunction); ?>
                 <?php endif; ?>
                 <!-- add role -->
-                <?php if($arrMember['trainerFromGroup'] != ''): ?>{{br}}<small>Trainer <?= $arrMember['trainerFromGroup'] ?></small><?php endif; ?>
+                <?php if($arrUser['trainerFromGroup'] != ''): ?>{{br}}<small>Trainer <?= $arrUser['trainerFromGroup'] ?></small><?php endif; ?>
 
             </li>
             <?php endif; ?>
@@ -71,12 +71,12 @@
 
         <h2>Vorstand</h2>
         <ul>
-            <?php foreach ($this->arrMembers as $arrMember): ?>
-            <?php if (is_int(strpos($arrMember['funktion'], "Vorstand"))): ?>
-            <?php if ($arrMember['hasSteckbrief']=="true"): ?>
-            <li><a href="{{link_url::portrait}}?uid=<?php echo $arrMember['id']; ?>" title="Steckbrief anzeigen" alt="Steckbrief anzeigen"><span class="bold"><?php echo $arrMember['name']; ?></span></a>, <?php echo $arrMember['funktionsbeschreibung']; ?></li>
+            <?php foreach ($this->arrUsers as $arrUser): ?>
+            <?php if (is_int(strpos($arrUser['funktion'], "Vorstand"))): ?>
+            <?php if ($arrUser['hasSteckbrief']=="true"): ?>
+            <li><a href="<?= $arrUser['portraitHref'] ?>" title="Steckbrief anzeigen" alt="Steckbrief anzeigen"><span class="font-weight-bold"><?php echo $arrUser['name']; ?></span></a>, <?php echo $arrUser['funktionsbeschreibung']; ?></li>
             <?php else: ?>
-            <li><span class="bold"><?php echo $arrMember['name']; ?></span>, <?php echo $arrMember['funktionsbeschreibung']; ?></li>
+            <li><span class="font-weight-bold"><?php echo $arrUser['name']; ?></span>, <?php echo $arrUser['funktionsbeschreibung']; ?></li>
             <?php endif; ?>
             <?php endif; ?>
             <?php endforeach; ?>

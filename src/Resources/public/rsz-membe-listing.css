@@ -1,16 +1,5 @@
-
-.rsz-mitgliederliste ul
-{
-	padding-left:0;
-	list-style:none;
+.mod_rsz_member_listing_module ul  li {
+    margin-bottom: 0.75rem;
 }
 
-.rsz-mitgliederliste ul>li
-{
-	margin-bottom:0.5em;
-}
-
-.rsz-mitgliederliste span.bold
-{
-	font-weight:bold;
-}
+.
