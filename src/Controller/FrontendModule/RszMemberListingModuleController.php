@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Markocupic\RszMemberListingBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -95,27 +96,28 @@ class RszMemberListingModuleController extends AbstractFrontendModuleController
         /** @var Database $databaseAdapter */
         $databaseAdapter = $this->get('contao.framework')->getAdapter(Database::class);
 
-        // Die ganze Tabelle
+        // Get portrait reader page
         $objJumpTo = $pageModelAdapter->findByPk($model->rszSteckbriefReaderPage);
 
         $arrUsers = [];
         $objUser = $databaseAdapter->getInstance()
-            ->prepare("SELECT * FROM tl_user WHERE isRSZ=? AND disable=? ORDER BY fe_sorting ASC, trainerFromGroup DESC, dateOfBirth")
+            ->prepare("SELECT * FROM tl_user WHERE isRSZ=? AND disable=? ORDER BY fe_sorting, trainerFromGroup DESC, dateOfBirth")
             ->execute('1', '');
 
         while ($objUser->next())
         {
-            $hasSteckbrief = null;
+            $hasSteckbrief = false;
             $objSteckbrief = $databaseAdapter->getInstance()
                 ->prepare("SELECT * FROM tl_rsz_steckbrief WHERE pid=? AND aktiv=?")
                 ->execute($objUser->id, 1);
+
             if ($objSteckbrief->numRows)
             {
                 $hasSteckbrief = true;
             }
 
             $arrUsers[] = [
-                'hasSteckbrief'         => ($hasSteckbrief && $objJumpTo !== null) ? true : false,
+                'hasSteckbrief'         => $hasSteckbrief && $objJumpTo !== null,
                 'portraitHref'          => ($hasSteckbrief && $objJumpTo !== null) ? $objJumpTo->getFrontendUrl('/' . $objUser->username) : null,
                 'id'                    => $stringUtilAdapter->specialchars($objUser->id),
                 'name'                  => $stringUtilAdapter->specialchars($objUser->name),

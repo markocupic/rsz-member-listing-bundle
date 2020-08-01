@@ -14,5 +14,5 @@
 // CSS
 if (TL_MODE === 'FE')
 {
-    $GLOBALS['TL_CSS'][]  = 'bundles/markocupicmemberlisting/rsz-member-listing.css';
+    $GLOBALS['TL_CSS'][]  = 'bundles/markocupicrszmemberlisting/rsz-membe-listing.css';
 }
