@@ -129,7 +129,7 @@ class RszMemberListingModuleController extends AbstractFrontendModuleController
                 'kategorie'             => $stringUtilAdapter->specialchars($objUser->kategorie),
                 'niveau'                => $stringUtilAdapter->specialchars($objUser->niveau),
                 'trainingsgruppe'       => trim((string) $objUser->trainingsgruppe),
-                'trainerFromGroup'      => trim((string) $objUser->trainerFromGroup),
+                'trainerFromGroup'      => StringUtil::deserialize($objUser->trainerFromGroup,true),
             ];
         }
 

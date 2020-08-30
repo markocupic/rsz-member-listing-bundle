@@ -62,7 +62,7 @@
                 <?php echo implode(', ', $arrFunction); ?>
                 <?php endif; ?>
                 <!-- add role -->
-                <?php if($arrUser['trainerFromGroup'] != ''): ?>{{br}}<small>Trainer <?= $arrUser['trainerFromGroup'] ?></small><?php endif; ?>
+                <?php if(count($arrUser['trainerFromGroup'])): ?>{{br}}<small>Trainer <?= implode(', ', $arrUser['trainerFromGroup']) ?></small><?php endif; ?>
 
             </li>
             <?php endif; ?>
