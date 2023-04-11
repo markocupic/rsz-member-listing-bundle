@@ -12,14 +12,10 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/rsz-member-listing-bundle
  */
 
-namespace Markocupic\RszMemberListingBundle;
+use Markocupic\RszMemberListingBundle\Controller\FrontendModule\RszMemberListingController;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class MarkocupicRszMemberListingBundle extends Bundle
-{
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
-}
+/**
+ * Frontend modules
+ */
+$GLOBALS['TL_LANG']['FMD']['rsz_frontend_modules'] = 'RSZ Frontendmodule';
+$GLOBALS['TL_LANG']['FMD'][RszMemberListingController::TYPE] = ['RSZ Mitgliederauflistung', 'Erstellen Sie eine RSZ Mitgliederliste'];

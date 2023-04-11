@@ -1,4 +1,4 @@
-![Alt text](src/Resources/public/rsz-logo.png?raw=true "logo")
+![Alt text](public/rsz-logo.png?raw=true "logo")
 
 
 # RSZ Mitgliederliste
