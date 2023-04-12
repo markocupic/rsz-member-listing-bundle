@@ -42,7 +42,7 @@ class RszMemberListingController extends AbstractFrontendModuleController
         $this->pageModel = $this->framework->getAdapter(PageModel::class);
     }
 
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response|null
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         // Get portrait reader page
         $objJumpTo = $this->pageModel->findByPk($model->rszSteckbriefReaderPage);
