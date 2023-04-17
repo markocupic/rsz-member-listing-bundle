@@ -64,12 +64,9 @@
                         <li class="mb-3">
                             {% set roles = [''] %}
 
-                            {% if 'Chef Ressort Leistungssport' in user.funktionsbeschreibung %}
-                                {% set roles = roles|merge(['Chef Ressort Leistungssport']) %}
-                            {% endif %}
-
-                            {% if 'Chef Ressort Nachwuchs' in user.funktionsbeschreibung %}
-                                {% set roles = roles|merge(['Chef Ressort Nachwuchs']) %}
+                            {# Chef Ressort Leistungssport, Chefin Ressort Nachwuchs, etc. #}
+                            {% if 'Chef' in user.funktionsbeschreibung %}
+                                {% set roles = roles|merge([user.funktionsbeschreibung]) %}
                             {% endif %}
 
                             {% if 'Trainer' in user.funktion|default([]) %}
@@ -79,7 +76,6 @@
                             {% if 'Wettkampfcoach' in user.funktion|default([]) %}
                                 {% set roles = roles|merge(['Wettkampfcoach']) %}
                             {% endif %}
-
 
                             {% if user.hasSteckbrief|default %}
                                 <a href="{{ user.portraitHref }}" title="Steckbrief anzeigen"><span class="fw-bold">{{ user.name }}</span></a>
