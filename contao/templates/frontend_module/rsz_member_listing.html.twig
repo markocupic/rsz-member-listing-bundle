@@ -1,0 +1,119 @@
+{% extends "@Contao/frontend_module/_base.html.twig" %}
+
+{% block content %}
+
+    {% add to head %}
+        <link rel="stylesheet" type="text/css" href="bundles/markocupicrszmemberlisting/rsz-member-listing.css|static"/>
+    {% endadd %}
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <h2>Trainingsgruppen</h2>
+
+            {# Display athletes sorted by training groups #}
+            {% for training_group in training_groups %}
+                {% set continue = false %}
+
+                {% if 'Alle Trainingsgruppen' in training_group %}
+                    {% set continue = true %}
+                {% endif %}
+
+                {% if continue is same as false %}
+                    {% set has_user = false %}
+
+                    {% for user in users %}
+                        {% if 'Athlet' in user.funktion|default([]) and user.trainingsgruppe|trim is same as training_group|trim %}
+                            {% set has_user = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if has_user %}
+                        <h3>{{ training_group }}</h3>
+                        <ul>
+                            {% for user in users %}
+                                {% if 'Athlet' in user.funktion|default([]) and user.trainingsgruppe|trim is same as training_group|trim %}
+                                    <li>
+                                        {% if user.link_digitalrock|default is not empty %}
+                                            <a href="{{ user.link_digitalrock }}" title="Resultate an nationalen Wettkämpfen"><i class="fa-solid fa-medal"></i></a>
+                                        {% else %}
+                                            <i class="fa-solid fa-medal"></i>
+                                        {% endif %}
+
+                                        {% if user.hasSteckbrief|default %}
+                                            <a href="{{ user.portraitHref }}" title="Steckbrief anzeigen"><span class="fw-bold">{{ user.name }}</span></a>
+                                        {% else %}
+                                            <span class="fw-bold">{{ user.name }}</span>
+                                        {% endif %}
+
+                                        <span>, {{ user.kategorie }}{% if user.nationalmannschaft|default %}, Nationalm.{% endif %}</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <h2>Trainer/Wettkampfcoach</h2>
+
+            <ul>
+                {% for user in users %}
+                    {% if 'Trainer' in user.funktion|default([]) or 'Wettkampfcoach' in user.funktion|default([]) %}
+                        <li class="mb-3">
+                            {% set roles = [''] %}
+
+                            {% if 'Chef Ressort Leistungssport' in user.funktionsbeschreibung %}
+                                {% set roles = roles|merge(['Chef Ressort Leistungssport']) %}
+                            {% endif %}
+
+                            {% if 'Chef Ressort Nachwuchs' in user.funktionsbeschreibung %}
+                                {% set roles = roles|merge(['Chef Ressort Nachwuchs']) %}
+                            {% endif %}
+
+                            {% if 'Trainer' in user.funktion|default([]) %}
+                                {% set roles = roles|merge(['Trainer']) %}
+                            {% endif %}
+
+                            {% if 'Wettkampfcoach' in user.funktion|default([]) %}
+                                {% set roles = roles|merge(['Wettkampfcoach']) %}
+                            {% endif %}
+
+
+                            {% if user.hasSteckbrief|default %}
+                                <a href="{{ user.portraitHref }}" title="Steckbrief anzeigen"><span class="fw-bold">{{ user.name }}</span></a>
+                            {% else %}
+                                <span class="fw-bold">{{ user.name }}</span>
+                            {% endif %}
+
+                            {# add roles #}
+                            {% if roles|length %}<span>{{ roles|join(', ') }}</span>{% endif %}
+
+                            {# add more roles #}
+                            {% if user.trainerFromGroup|default([])|length %}
+                                <span class="d-block"><small>Trainer {{ user.trainerFromGroup|join(', ') }}</small></span>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <h2>Vorstand</h2>
+            <ul>
+                {% for user in users %}
+                    {% if 'Vorstand' in user.funktion|default([]) %}
+                        <li>
+                            {% if user.hasSteckbrief|default %}
+                                <a href="{{ user.portraitHref }}" title="Steckbrief anzeigen"><span class="fw-bold">{{ user.name }}</span></a>, {{ user.funktionsbeschreibung }}
+                            {% else %}
+                                <span class="fw-bold">{{ user.name }}</span>, {{ user.funktionsbeschreibung }}
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}

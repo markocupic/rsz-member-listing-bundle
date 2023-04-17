@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Markocupic\RszMemberListingBundle\Controller\FrontendModule;
 
+use Contao\Config;
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -26,7 +28,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(RszMemberListingController::TYPE, category: 'rsz_frontend_modules', template: 'mod_rsz_member_listing')]
+#[AsFrontendModule(RszMemberListingController::TYPE, category: 'rsz_frontend_modules')]
 class RszMemberListingController extends AbstractFrontendModuleController
 {
     public const TYPE = 'rsz_member_listing';
@@ -42,7 +44,7 @@ class RszMemberListingController extends AbstractFrontendModuleController
         $this->pageModel = $this->framework->getAdapter(PageModel::class);
     }
 
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         // Get portrait reader page
         $objJumpTo = $this->pageModel->findByPk($model->rszSteckbriefReaderPage);
@@ -87,7 +89,9 @@ class RszMemberListingController extends AbstractFrontendModuleController
             ];
         }
 
-        $template->users = $arrUsers;
+        $template->set('training_groups', StringUtil::trimsplit(',', Config::get('mcupic_be_benutzerverwaltung_trainingsgruppe')));
+
+        $template->set('users',  $arrUsers);
 
         return $template->getResponse();
     }
